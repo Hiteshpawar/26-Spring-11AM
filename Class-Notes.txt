@@ -1110,7 +1110,7 @@ private IPayment payment; //credit or debit
 private IMsgFormatter formatter; //html or xml
 ----------------------------------------------------
 
-private Set<String> places;
+private List<String> places;
 
 ------------------------------------------------------------------------
 
@@ -1122,22 +1122,58 @@ Map and
 Properties
 
 
-List
-----
-
-private List<String> places;
-
+private List<String> places;  //java.util.ArrayList
 
 <property name="places">
-   
-    <list>
+   <list>
 	<value>Hyd</value>
-	<value>Banglore</value>
-     </list>
-
+	<value>Pune</value>
+   </list>
 </property>
 
+-------------------------------------------------------
+private Set<Long> phnos; //java.util.LinkedHashSet
 
+<property name="phnos">
+  <set>
+	<value>0808080</value>
+	<value>9797979</value>
+  </set>
+</property>
+--------------------------------------------------------
+private Map<String,Long> projectCodes; //java.util.LinkedHashMap
+
+<property name="projectCodes">
+	<map key-type="" value-type="">
+		<entry key="" value="" />
+		<entry key="" value""/>
+ 	</map>
+</property>
+---------------------------------------------------------------------
+
+private Properties emails;
+
+<property name="emails">
+ <props>
+	<prop key="personal"></prop>
+	<prop key="ofc"></prop>
+ </props>
+</property>
+------------------------------------------------------------------
+
+
+
+
+
+
+
+Enumeration
+Iterator
+ListIterator
+SplitIterator (jdk 1.8)
+
+Collections are mainly used for storing the data
+Streams are used for performing operations on collection data
 
 
 
@@ -1171,20 +1207,79 @@ con.getClass().getName() ; // T4c@Connection
 
 
 
+Movie.java
+----------
+
+private Integer movieId;
+private String producerName;
+private String directorName;
+private String movieName;   // null injection
+private String hero;
+private String heroine;
+
+
+<bean id="movie" class="com.tollywood.beans.Movie">
+		<constructor-arg name="movieId" value="103" />
+		<constructor-arg name="producerName" value="Ganesh" />
+		<constructor-arg name="directorName" value="Trivikram" />
+		<constructor-arg name="hero" value="Balayya" />
+		<constructor-arg name="heroine">
+			<null />
+		</constructor-arg>
+		<constructor-arg name="movieName">
+			<null />
+		</constructor-arg>
+	</bean>
+
+
+Note: In Constructor Injection, its mandatory that we need to inject values for all the variables.
+
+If we don't know value for a variable, then we shuld use null injection.
+
+
+<constructor-arg name="movieName">
+	<null />
+</constructor-arg>
 
 
 
 
+Bean Scopes
+-----------
+
+Bean Scope will decide how many objects should be created for a bean class in IOC container.
+
+//obj will be created
+Movie m1 = factory.getBean("movie",Movie.class); 
+
+//obj creation depends on bean scope
+Movie m2 = factory.getBean("movie",Movie.class);
 
 
+Spring supports below 4 types of scopes
+
+1) singleton  (by default)
+2) prototype
+3) request
+4) session 
 
 
+syntax : 
+-------
+
+<bean id="car" 
+      class="pkg.Car" 
+      scope="singleton|prototype|request|session" />
 
 
+Singleton : Only one object will be created.
 
+<bean id="car" class="pkg.Car" /> 
+<bean id="car" class="pkg.Car" scope="singleton"/>
 
+Prototype : For every call of getBean() method new object will be created.
 
-
+<bean id="car" class="pkg.Car" scope="prototype"/>
 
 
  
