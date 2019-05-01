@@ -727,6 +727,453 @@ Strategy Design Pattern Rules
 
 
 
+Spring Environement Setup
+-------------------------
+
+Softwares Required
+------------------
+1) Maven
+2) IDE
+3) JDK 8 or higher
+4) Spring jars 
+5) Commons-Logging jar
+
+
+
+
+We can start IOC Container in 2 ways
+
+1)BeanFactory
+
+2)ApplicationContext
+
+
+BeanFactory factory = new XmlBeanFactory(Resource res);
+
+ClassPathResource
+FileSystemResource
+
+
+
+
+
+
+Both are interfaces only.
+
+BeanFactory  factory = new XmlBeanFactory(Resource resource);
+
+String fileName="Beans.xml";
+Resource resource = new ClassPathResource(fileName);
+BeanFactory factory = new XmlBeanFactory(resource);
+
+
+
+
+//loading xml file from classpath
+Resource resource  = new ClassPathResource("Beans.xml");
+
+BeanFactory factory = new XmlBeanFactory(resource);
+--------------------------------------------------------------
+
+//loading xml file from file system
+Resource resource =
+	 new FileSystemResource ("D://Config/Beans.xml);
+BeanFactory factory = new XmlBeanFactory(resource);
+
+----------------------------------------------------------------
+
+
+<id>100</id>  ------> Simple Element
+
+
+<person>
+	<name>John</name>
+</person>
+----------------------
+name ------ > simple element
+person -----> compound element
+
+
+
+
+
+<?xml version="1.0" encoding="UTF-8"?>
+<Book>
+   <name>Spring</name>
+   <author>Rod Johnson</author>
+</Book>
+------------------------------------------
+name & author -----> Simple Elements
+Book -------------->Compound Elements
+
+
+1) Wellformness : Will talk about can we read that xml or not?
+2) Validness : Will talk about can we use that xml or not?
+
+
+Q) How can we say xml is wellformed ?
+
+Rule-1 : Xml Should contain only one root element
+Rule-2 : Every start tag should contain end tag.
+
+If xml follows above 2 rules then we can say that xml is well-formed. If xml is wellformed humans & machines can read that xml.
+
+<person>
+  <id>101</id>
+  <name>Raju</name> 
+   <adress>
+      <city>Hyd</city>
+       <state>TG</state>
+   </adress>
+</person>
+--------------------------------------------------------------
+
+
+
+
+
+
+
+
+
+Q) How can we say xml is valid ?
+
+
+
+
+<order>
+<item>
+  <code>101</code>
+  <quantity>abc</quantity>
+</item>
+<address>
+  <city>Hyd</city>
+  <state>TG</state>
+  <zip>500081</zip>
+</address>
+</order>
+======================================================================
+Xml
+---
+
+XML stands for extensible markup language
+
+WHich is used to store the data & transfer the data
+
+Xml will represent the data in elements format.
+
+1) Simple Element
+
+The element which contains the data.
+
+	<id>101</id>
+
+
+2) Compound Element 
+	
+The element which contains child element(s) is called as Compound element.
+
+<name>
+   <first-name>Cedrone</first-name>
+   <last-name>Charles</last-name>
+</name>
+-----------------------------------------------------------------
+
+
+1) Wellformness : can we read it or not ?
+
+a) XMl Should contain only one root element
+b) Every start tag should contain end tag.
+
+
+2) Validness : can we use it or not ?
+
+XML validitity will be decided by dtd or xsd.
+
+DTD : Only structure validation
+
+XSD : Structure + Data type validation
+----------------------------------------------------------------------
+
+Parser : A program which reads xml file data in xml style.
+	
+xml style : ignoring meta data and reading actual data.
+
+--------JAX-P API-------------------
+SAX
+DOM
+STAX
+----------------------------------------------
+
+
+------------------------Beans.xml------------------------
+<beans>
+
+   <bean   id="a"   class=""> --- Bean Definition
+
+   <bean id="b"  class="" >  -- - Bean Definition
+
+</beans>
+----------------------------------------------------------
+
+ClassPathResource 
+
+FileSystemResource
+------------------------------------------------------------------
+
+
+1) BeanFactory
+
+	Resource resource = 
+		new ClassPathResource("com/maruti/cfg/Beans.xml);
+
+	BeanFactory factory = 
+			new XmlBeanFactory(resource);
+---------------------------------------------------------------------
+
+
+
+
+
+
+
+Resource resource = new ClassPathResource("com/cfg/Beans.xml");
+BeanFactory  factory = new XmlBeanFactory(resource);
+factory.getBean("qbc");
+---------------------------------------------------------------
+1) Loads Beans.xml file from given location
+
+2) Give that xml file as input to XmlBeanFactory
+
+3) Parser check will for welformness and validness
+
+4) BeanFactory will load all beans defintions from xml file and 
+will store BeansMetaData (in memory).
+----------------------------------------------------------------------
+
+Resource res = new ClassPathResource("com/cfg/Beans.xml");
+BeanFactory factory = new XmlBeanFactory(res);
+--------------------------------------------------------------------
+
+factory.getBean("car");
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Object obj = factory.getBean("paymentCtx");
+PaymentContext ctxt = (PaymentContext) obj;
+-------------------------------------------------------------
+PaymentContext ctxt = (PaymentContext) factory.getBean("paymentCtx");
+-------------------------------------------------------------------PaymentContext ctxt = 
+               factory.getBean("paymentCtx",PaymentContext.class);
+--------------------------------------------------------------------
+
+
+Constructor Injection:
+----------------------
+INjecting dependent class object into target class by calling 
+target class constructor is called as Constructor Injection(CI).
+
+
+public class Car {
+	
+    private IEngine  eng=null;
+
+    public Car(DieselEng eng){
+	this.eng = eng;
+    }
+}
+
+new Car(); //invalid
+new Car(new PetrolEngine());
+
+
+------------------------------------------------------------------
+<bean id="car"  class="pkg.Car">
+  <constructor-arg name="eng" ref="petrolEng" />
+</bean>
+----------------------------------------------------------------
+setter method : setter injection
+
+
+<property name="" ref="" />
+
+name - variable name
+ref - bean id
+
+target obj will be created first in SI
+
+partial dependency injection is possible in SI
+
+
+
+
+constructor of target
+
+<constructor-arg name="" ref="" />
+
+dependent obj will be created first in CI
+
+Partial Dependency is not possible in CI.
+
+
+
+
+
+class Person {
+
+   Integer personId; //101
+   String personName; //john
+   Integer personAge; //25
+
+  //setter methods required
+
+}
+----------------------------------------------
+<bean id="person" class="pkg.Person">
+  <property name="personId" value="101" />
+  <property name="personName" value="John"/>
+  <property name="personAge" value="25"/>
+</bean>
+
+
+
+public Car(IEngine eng){
+
+}
+
+public MessageWriter(IMsgFormatter formatter){
+
+
+}
+
+
+PaymentContext(IPayment payment){
+
+}
+
+public XmlBeanFactory(Resource res){
+
+}
+
+
+
+Person p = new Person();
+
+System.out.println(p); //com.hps.beans.Person@2ed94a8b
+System.out.println(p.toString());com.hps.beans.Person@2ed94a8b
+
+
+
+-================================================
+
+public String toString(){
+
+ return 
+  this.getClass().getName()+"@"+Integer.toHexString(this.hashCode());
+
+}
+
+com.hps.Person@e979l96
+
+
+
+Injecting value to a variable ==> we will use value attribute
+
+<property name=""  value="" />
+
+Injecting object to a varibale ===> we will use ref attribute
+
+
+<property name="" ref="" />
+=======================================================================
+
+
+private int sno; //1
+private Integer personId; /101
+private String personName; //John
+
+private IEngine eng; // de or pe
+private IPayment payment; //credit or debit
+private IMsgFormatter formatter; //html or xml
+----------------------------------------------------
+
+private Set<String> places;
+
+------------------------------------------------------------------------
+
+Collection Injection
+--------------------
+List
+Set
+Map and
+Properties
+
+
+List
+----
+
+private List<String> places;
+
+
+<property name="places">
+   
+    <list>
+	<value>Hyd</value>
+	<value>Banglore</value>
+     </list>
+
+</property>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Connection con = DriverManager.getConnection(url,uname,pwd);
+
+con.getClass().getName() ; // T4c@Connection
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
