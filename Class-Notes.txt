@@ -1155,7 +1155,7 @@ private Properties emails;
 
 <property name="emails">
  <props>
-	<prop key="personal"></prop>
+	<prop key="personal">iyiy</prop>
 	<prop key="ofc"></prop>
  </props>
 </property>
@@ -1174,29 +1174,6 @@ SplitIterator (jdk 1.8)
 
 Collections are mainly used for storing the data
 Streams are used for performing operations on collection data
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-Connection con = DriverManager.getConnection(url,uname,pwd);
-
-con.getClass().getName() ; // T4c@Connection
-
-
-
-
-
 
 
 
@@ -1280,6 +1257,123 @@ Singleton : Only one object will be created.
 Prototype : For every call of getBean() method new object will be created.
 
 <bean id="car" class="pkg.Car" scope="prototype"/>
+
+
+
+
+
+
+
+BeanFactory factory = new XmlBeanFactory(resource);
+
+factory.getBean("movie",Movie.class); //obj will be created
+
+factory.getBean("movie",Movie.class); //
+
+
+
+
+<bean id="" class="" />
+
+singleton
+prototype
+request
+session
+
+
+
+
+
+
+
+BeanFactory
+-----------
+It is an interface
+It is used to start IOC Container
+IT is Lazy Container
+
+Why it is called as Lazy ? :: Until unless we call getBean( ) method bean object will not be created.
+
+how many objects should be created for a bean depends on bean scope.
+
+It doesn't support for I18N.
+It doesn't support for Event Handling
+It doesn't support for WebApplication Development.
+
+ApplicationContext
+------------------
+It is an interface
+It is also used to Start IOC Container
+It is Eager container
+
+Why it is Eager Container ? :: When IOC starts immediatley it will create bean objects if scope is singleton and lazy-init=false.
+
+It supports I18N
+It supports Event Handling
+It supports Web Application Development
+
+ApplicationContext ctx = 
+		new ClasspathXmlApplicationContext(String filePath)
+
+
+Note : scope attribute default value is singleton
+       lazy-init attribute default value is false.
+
+
+<bean id=""  class=""  scope="" lazy-init="true" />
+-----------------------------------------------------------------------
+
+
+Injecting Inner Beans
+---------------------
+One bean object can be injected to another bean in 2 ways
+
+
+1) Style-1  (Re-usability will be available)
+
+<bean id="a" class="pkg.Demo" />
+
+<bean id="b" class="pkg.Demo1">
+  <property name="a" ref="a"/>
+</bean>
+
+
+2) Stype-1 (No Re-Usability)
+
+<bean id="b" class="pkg.Demo1">
+  <property name="a">
+	<bean class="pkg.Demo" />
+  </property>
+</bean>
+
+Note : We can't create object for inner beans directly.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
  
