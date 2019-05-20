@@ -1348,6 +1348,345 @@ One bean object can be injected to another bean in 2 ways
 
 Note : We can't create object for inner beans directly.
 
+Bean Inheritence
+----------------
+
+What is Inheritence?
+--------------------
+
+Extending Properties from one class to another class is called Inheritence.
+
+The main goal is re-usability.
+
+It is also called as IS-A relationship.
+
+
+Bean Inheritence
+----------------
+To copy properties from one bean to another bean we can use Bean Inheritence concept in Spring.
+
+
+
+Note: If property is not declared in child bean definition then only IOC will copy parent bean property value to child bean property.
+
+public class Car {
+   int id;
+   String name;
+   Double price;
+   String color;
+   String regNum;
+   //setters
+   //toString()
+}
+-----------------------------------------------------------------------
+<bean id="c1" class="pkg.Car">
+  <property name="id" value="101"/>
+  <property name="name" value="Swift" />
+  <property name="price" value="850000"/>
+  <property name="color" value="Red"/>
+  <property name="regNum" value="TG 27 ES 6868"/>
+</bean>
+
+
+<bean id="c2" class="pkg.Car" parent="c1">
+  <property name="id" value="102"/>
+ <property name="regNum" value="TG 27 ES 6862"/>
+</bean>
+
+<bean id="baseCar" class="com.maruthi.beans.Car" abstract="true">
+	<property name="name" value="Swift" />
+	<property name="price" value="850000" />
+	<property name="color" value="Red" />
+</bean>
+
+<bean id="c1" class="com.maruthi.beans.Car" parent="baseCar">
+ 	<property name="id" value="101" />
+	<property name="regNum" value="TG27 ES 6861" />
+</bean>
+----------------------------------------------------------------------
+-> It is recomended to configure base bean with common properties
+-> if we give abstract=true in bean definition , that bean definition will be abstract hence object will not be created.
+-> If we give abstract=true, class will not become abstract.
+
+
+Collection Merging
+------------------
+
+If we want to copy collection properties from one bean to another bean then we can use Collection Merging.
+
+Note: Collection Merging will work only in Bean Inheritence scenario.
+
+-----------------------------------------------------------------------
+
+Meeting : 
+
+id = 101
+name = Triage Meeting
+purpose = To discuss defects occured in UAT
+participants = john, Ram, Sita, Gita 
+
+
+Scrum Meetings
+
+Status Meetings
+
+Triage Meetings
+
+All Hands Meeting
+
+Manual Wiring
+------------
+Injecting dependent object into target object using ref attribute.
+
+
+AutoWiring
+----------
+
+IOC container can perform auto wiring.
+
+IOC can identify dependent object and it can inject into target object.
+
+By Default Autowiring will be in disable mode. If we want to use Autowiring, we should enable it.
+
+Autowiring should be enabled on Target Bean.
+
+syntax :  <bean id="" class="" autowire="byName|byType|constructor" />
+
+
+byName:
+-------
+
+With target class user-defined variable name there should be a bean in bean configuration file. Then that bean will be considered as dependent bean and it will be injected to target bean.
+
+If we don't have any bean defintion which is matching with target class user defined type variable then autowiring can't be performed.
+
+Note : IOC will check varibale name with bean id or bean name.
+
+
+byType:
+-------
+IOC will check user-defined varible data type with bean class in bean configuration file. If variable data type and Bean class is same then ioc consider that bean as dependent bean and it will inject that bean to target.
+
+Note : There is a possibility that one class can be configured with multiple bean definitions using unique ids. In this sitatuion IOC can't identify dependent bean hence it will throw Exception (NoUniqueBeanDefinitionFound).
+
+To resolve this we can use 'primary' attribute in bean defition. The bean which contains primary=true is called as auto-wire candidate.
+
+
+
+
+
+
+byName - variable name should match with bean name
+
+byType - variable data type should match with bean class
+
+constructor
+
+no ------------- > no auto-wiring
+
+
+
+<bean id="" class="" autowire="byName | byType | constructor" />
+
+
+
+
+
+
+
+
+
+constructor
+-----------
+
+
+
+
+
+
+Spring Core Basic Concepts
+==========================
+
+What is Spring
+Spring Advantages
+Spring Modules
+IOC 
+Dependency Injection
+Setter Injection
+Constructor Injection
+Setter Injections vs Constructor Injection
+BeanFactory
+ApplicationContext
+Injecting Inner Beans
+Collection Injection
+Bean Scopes
+Bean Inheritence
+Collection Merging
+Autowiring
+----------------------------------------------------------------------
+
+Spring Core Advanced Concepts
+=============================
+P and C namespaces
+Depends On
+Bean Aliasing
+Instance Factory Method Instantiation
+Static Factory Method Instanatiation
+LookUp Method Injection
+Method Replacement
+Bean Life Cycle
+Bean Post Processor
+Bean Factory Post Processor
+Property Editors
+Working with I 18 N
+Working with Multiple Bean Config Files
+Event Handling
+----------------------------------------------
+
+IOC 
+DI ( SI & CI )
+
+<bean id="" 
+      class="" 
+      scope=""
+      parent="" 
+      abstract="" 
+      lazy-init=""
+      autowire="" >
+
+	<property />
+	<constructor-arg />
+
+</bean>
+
+
+What is Spring Bean?
+-------------------
+The class whose life cycle is managing by IOC then that class is called as Spring Bean.
+
+
+<bean id="" 
+      class="" 
+      scope=""
+      parent="" 
+      abstract="" 
+      lazy-init=""
+      autowire="" >
+
+	<property name="" value or ref />
+	<constructor-arg />
+
+</bean>
+
+-----------------------------------------
+class Contact {
+
+  int contactId;
+  String contactName;
+  Long contactNumber;
+  Address addr;
+
+  //Setter methods
+  
+  //toString( )
+
+}
+----------------old approach---------------------------
+<beans <xsd linking> >
+<bean id="c" class="pkg.Contact">
+	<property name="contactId" value="101" />
+ 	<property name="contactName" value="Raj"/>
+	<property name="contactNumber" value="797979979"/>
+	<property name="addr" ref="a"/>
+</bean>
+</beans>
+---------------------using p-namespace-----------
+<beans xsd-linking  p-namespace-url >
+	
+   <bean id="c" class="pkg.Contact" 
+		p:contactId="101"  
+		p:contactName="Raj"
+		p:contactNumber="7797979" 
+		p:addr-ref = "a" />	
+<bean>
+=========================================================================
+<bean id="contact" class="com.pc.beans.Contact" 
+	p:id="101" p:name="Raj" 
+	p:number="9797979799" p:addr-ref="address" />
+
+	<bean id="address" class="com.pc.beans.Address" 
+	c:city="hyd" c:state="TG" c:country="India" />
+
+
+
+
+
+
+
+
+
+
+Depends-On
+----------
+
+class Car {
+
+   private Engine eng;
+
+}
+
+class Robot {
+  
+  private Chip chip;
+
+}
+-------------------------------------------------------------
+<bean id="c" class="pkg.Chip" />
+
+<bean id="r" class="pkg.Robot">
+   <property name="chip" ref="c"/>
+</bean>
+-------------------------------------------------
+
+
+
+<bean id="emiCalc" class="pkg.EmiCalculator" 
+	depends-on="cacheManager"/>
+
+
+
+
+Bean Aliasing
+=============
+
+<bean name="c1,c2 c3" class="com.maruthi.Car" />
+=========================================
+Car c1 = ctxt.getBean("c1",Car.class);
+
+
+
+
+
+
+Q)what is the difference between id and name attributes in bean tag?
+
+Using id we can configure only one value
+
+Using name we can configure more than one name
+
+Note : When we configure multiple names for a  bean using name attribute  space and comma will be considered as delimter.
+
+
+If you want write a bean name including comma or space then we should use alias tag.
+
+<alias name="res1" alias="res5," />
+
+-------------------------------------------------------------------------
+
+Amazon - E-Commerce
+
+
+BlueDart 
 
 
 
@@ -1365,6 +1704,293 @@ Note : We can't create object for inner beans directly.
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+<bean id="e1" class="pkg.Engine" />
+
+
+<bean id="car1" class="pkg.Car">
+	<property name="eng" ref="e1"/>	
+</bean>
+<bean id="car2" class="pkg.Car">
+	<property name="eng" ref="e1"/>	
+</bean>
+---------------------------
+ctxt.getBean("e1",Engine.class); // valid
+ctxt.getBean("car",Car.class); // valid
+
+------------------------------------------------
+
+<bean id="c" class="pkg.Car">
+   <property name="eng">
+	<bean class="pkg.Engine" id="eng" />
+   </property>
+</bean>
+--------------------------------
+ctxt.getBean("eng",Engine.class);   //invalid
+ctxt.getBean("car",Car.class); // valid
+
+id and name attributes in bean tag.
+
+
+<bean id="p1" class="" />
+
+
+
+<bean name="p1,p2,p3 p4" class="" />
+
+<alias name="p1"  alias="p5," />
+------------------------------------------
+String[] names = ctxt.getAliases("p1");
+
+p2
+p3
+p4
+p5,
+
+
+
+Amazon  ---- > BlueDart ---- For cities delivery
+
+Amazon ----> DTDC ----- For Villages delivery
+
+
+if(zip>=500080) ---- City --- BlueDart obj
+
+if(zip < 500080 ) --- village ---- Dtdc obj
+
+
+amazon -- bluedart -- cities
+
+
+amazon -- dtdc -- villages
+
+
+
+
+
+
+
+
+
+Bean Aliasing
+-------------
+
+id vs name
+
+<bean id="car" class="" />
+
+<bean name="c1,c2,c3 c4" class="" />
+
+<alias name="c1" alias="c5," />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+ApplicationContext
+------------------
+
+Alias tag in config file
+
+
+
+
+
+
+
+
+
+
+
+Aware Interfaces
+------------------
+This concept is also called as Interface Injection.
+
+Dependency Injection is performing through interface hence it is called as Interface iNjection.
+
+Ex : BeanFactoryAware and ApplicationContextAware etc...
+
+If we don't know which dependent object should be injected into target at compilation time then we can inject IOC to our target.
+
+If IOC is injected to our target class, then target class can decide which dependent object it should load in runtime based on conditions.
+
+
+BeanFactoryAware
+----------------
+
+class AmazonService implements BeanFactoryAware {
+
+private BeanFactory factory = null;
+
+public setBeanFactory(BeanFactory factory){
+	this.factory = factory;
+}
+	
+	//logic
+}
+
+
+Factory Methods
+---------------
+
+The method which is responsible to creat same or different class object is called as factory method.
+
+Factory methods can be classified into 2 types
+
+1) Static factory method
+
+	Connection con = DriverManager.getConnection(url,uname,pwd);
+	
+	Calendar c = Calendar.getInstance();
+
+2) Instance Factory Method
+		String msg = "hello";
+		String sub = msg.substr(0,3);
+
+		char ch = msg.charAt(0);
+
+
+
+
+
+class Car {
+
+}
+
+<bean id="c" class="pkg.Car" />
+--------------------------------------------
+
+<bean id="al" class="java.util.ArrayList" />
+
+-------------------------------------------
+
+<bean id="calc" class="java.util.Calendar" 
+		factory-method="getInstance" />
+
+
+Calendar c = Calendar.getInstance( ) ;
+
+================Static Factory method Instantiation================
+<bean id="cal"
+      class="java.util.Calendar" 
+      factory-method="getInstance" />
+===================================================================
+
+
+
+
+
+
+
+
+
+12-May-2019   +   57 = ?
+
+
+addDays(Date d, int days) {
+	cal.setTime(d);
+	cal.add(Calendar.DAY,days);
+	Date finalDate = cal.getTime();
+}
+
+new Date()
+
+
+String str = "10-May-2019" ;
+
+
+SimpleDateFormat
+----------------
+Date  parse(String str) -----> String to Date conversion
+
+String format(Date d) ------> Date to String Conversion
+
+
+
+Instance Factory Method Instantiation
+=====================================
+
+
+
+
+
+
+
+
+
+
+P & C namespaces
+Bean Aliasing
+Depends On
+Aware Interfaces
+Static Factory Method Instantiation
+Instance Factory Method Instantiation
+Nested Bean Factory
+Multiple Configuration Files
+
+Method Injections (Lookup method & Method Replacment)
+Bean Life Cycle
+Bean Post Processor
+Bean Factory Post Processor
+I 18 N
+Property Editors
+Event Handling
+
+Spring Core Annotations
+
+
+
+
+
+
+Mutitple Configuration Fies
+---------------------------
+
+web components
+service components
+persistent components
+
+
+Method Injections
+-----------------
+
+1) LookUp method Injection : When we want to inject prototype bean into singleton bean
+
+2) Method Replacement : If we want to replace one method with another method in runtime.
+
+
+<bean id="t" class="pkg.Token" scope="prototype" />
+
+<bean id="tokenGenerator" class="pkg.TokenGenerator">
+	<property name="token" ref="t"/>
+</bean>
+----------------------------------------------------------------
+TokenGenerator tg = 
+	ctxt.getBean("tokenGenerator",TokenGenerator.class);
+
+	tg.getToken(); // 1234
+
+	tg.getToken( ); //1234
 
 
 
